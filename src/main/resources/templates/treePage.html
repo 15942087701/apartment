@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+
+<!-- 引入bootstrap的css -->
+<link  href="../js/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+<!-- 引入bootstrap-treeview的css -->
+<link  href="../js/treeview/bootstrap-treeview.min.css" rel="stylesheet" >
+<!-- 引入bootstrap-addTabs的css -->
+<link  href="../js/addTabs/addTabs.css" rel="stylesheet" >
+<!-- 引入bootstrap-table的css -->
+<link  href="../js/table/bootstrap-table.min.css" rel="stylesheet" >
+<!-- 引入fileinput的css -->
+<link type="text/css" rel="stylesheet" href="../js/fileinput/css/fileinput.min.css" />
+
+
+
+
+<!-- 引入jquery -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/bootstrap/js/bootstrap.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/treeview/bootstrap-treeview.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/addTabs/addTabs.js"></script>
+<!-- 引入bootstrap-table的js-->
+<script type="text/javascript" src="../js/table/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="../js/table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!-- 引入bootbox.js -->
+<script type="text/javascript" src="../js/bootbox/bootbox.js"></script>
+<!-- 引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/fileinput.min.js"></script>
+<!--  引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/locales/zh.js"></script>
+
+
+<script type="text/javascript" src="../js/fileinput/themes/fa/theme.js"></script>
+
+<style type="text/css">
+    body {padding-top:55px;}
+</style>
+<body>
+<!--导航条  -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <!--定义在容器顶部  -->
+    <div class="container-fluid">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <!-- 头部信息 -->
+        <div class="navbar-header">
+                <img src="../img/image.jpg" style="margin:auto 0px" onclick="toShow()" height="40px" width="40px"/>
+
+
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div style="float: right"><font color="red">欢迎您,<span id="userSpanId"></span></font><font color="white">丨</font><a href="javascript:dropout()"><font color="red">退出</font></a></div>
+    </div><!-- /.container-fluid -->
+</nav>
+<!-- ============================导航结束==================================-->
+<!--=========栅格布局 ==============-->
+<div class="row">
+    <div class="col-md-3">
+        <!-- tree 的插件 -->
+        <div id="treeDiv"></div>
+    </div>
+
+    <div class="col-md-9">
+        <!--   选项卡    -->
+        <!-- Nav tabs -->
+        <ul id="tabs" class="nav nav-tabs" role="tablist">
+
+        </ul>
+        <!-- 选项卡  内容 -->
+        <!-- Tab panes -->
+        <div class="tab-content">
+
+        </div>
+    </div>
+</div>
+<input type="hidden" th:value="${accounts}" id="accountsId"/>
+<input type="hidden" th:value="${userPassWord}" id="userPassWordId"/>
+<input type="hidden" th:value="${jobId}" id="jobId"/>
+<input type="hidden" th:value="${userName}" id="userNameId"/>
+</body>
+<script type="text/javascript">
+    $(function (){
+        getTree();
+        userInformation();
+        $.addtabs.add({
+            title:"首页",
+            url:"../apartment/toShow",
+        })
+    })
+    function userInformation(){
+        var jobId=$("#jobId").val();
+        var userName=$("#userNameId").val();
+        if(jobId=="2"){
+            $("#userSpanId").html("超级管理员");
+        }else{
+            $("#userSpanId").html(userName);
+        }
+    }
+    function getTree(){
+        var jobId=$("#jobId").val();
+        var userPassWord=$("#userPassWordId").val();
+        var accounts=$("#accountsId").val();
+              $.ajax({
+                url:"../apartment/getTree?jobId="+jobId,
+                type:"post",
+                success:function(data){
+                    $.addtabs({iframeHeight:870});
+                    $("#treeDiv").treeview({
+                        //data属性 树节点信息 json数组
+                        data: data,
+                        //tree默认展开的节点级别默认为2
+                        levels: 1,
+                        //背景颜色
+                        //backColor: 'green'
+                        //是否显示复选框
+                        showCheckbox:false,
+                        //是否允许选中多个节点
+                        //multiSelect:true,
+                        //启用节点的超链接功能默认为false,节点需指定href属性
+                        enableLinks:false,
+                        //事件当节点选中时
+                        onNodeSelected:function(event,node){
+                            //动态向 nav-tabs 导航标签添加tab选项卡
+                            //addTabs方法  add() 添加tab  close()关闭tab  closeAll() 关闭全部tab
+
+                            if(node.text!=null&&node.text=="账号信息页"){
+                                $.addtabs.add({
+                                    id:node.id,
+                                    title:node.text,
+                                    url:"../apartment/referuser?accounts="+accounts+"&userPassWord="+userPassWord,
+                                })
+                            }
+                            if(null !=  node.url && node.url.length>0){
+                                $.addtabs.add({
+                                    id:node.id,
+                                    title:node.text,
+                                    url:node.url,
+                                })
+                            }
+
+                        }
+                    })
+
+
+                },error:function(){
+                    alert("错误！！！");
+                }
+            });
+
+    }
+    function toShow(){
+        location.reload();
+    }
+    function dropout(){
+        var accounts=$("#accountsId").val();
+        $.ajax({
+            url:"../apartment/dropout",
+            type:"post",
+            data:{accounts:accounts},
+            success:function(data){
+             location.href="../apartment/toLogin";
+            },error:function(){
+                alert("错误！！！");
+            }
+        });
+    }
+</script>
+</html>

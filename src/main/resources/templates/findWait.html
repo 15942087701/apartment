@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<!-- 引入bootstrap的css -->
+<link  href="../js/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+<!-- 引入bootstrap-treeview的css -->
+<link  href="../js/treeview/bootstrap-treeview.min.css" rel="stylesheet" >
+<!-- 引入bootstrap-addTabs的css -->
+<link  href="../js/addTabs/addTabs.css" rel="stylesheet" >
+<!-- 引入bootstrap-table的css -->
+<link  href="../js/table/bootstrap-table.min.css" rel="stylesheet" >
+<!-- 引入fileinput的css -->
+<link type="text/css" rel="stylesheet" href="../js/fileinput/css/fileinput.min.css" />
+
+
+
+
+<!-- 引入jquery -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/bootstrap/js/bootstrap.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/treeview/bootstrap-treeview.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/addTabs/addTabs.js"></script>
+<!-- 引入bootstrap-table的js-->
+<script type="text/javascript" src="../js/table/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="../js/table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!-- 引入bootbox.js -->
+<script type="text/javascript" src="../js/bootbox/bootbox.js"></script>
+<!-- 引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/fileinput.min.js"></script>
+<!--  引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/locales/zh.js"></script>
+
+
+<script type="text/javascript" src="../js/fileinput/themes/fa/theme.js"></script>
+
+<style>
+    .table>tbody>tr>td {
+        border: 0px;
+    }
+    .table>thead>tr>th {
+        border:0px;
+    }
+
+</style>
+
+<body>
+
+<!--导航条开始-->
+<nav class="navbar navbar-default">
+    <div class="container-fluid" style="float:left">
+        <div class="navbar-header"  >
+            <a class="navbar-brand" style="margin-top:1px" href="#">
+                <img alt="Brand" style="height:23px;width:23px;" src="../img/image.jpg">
+            </a>
+        </div>
+
+    </div>
+    <div style="margin-top:5px;width:15%;height:100%;float:right">
+        <div style="margin-top:5px;float:right;width:180px;height:30px;">
+            <font>欢迎您，${user}</font> |&nbsp;&nbsp;&nbsp;<a href="" >退出</a>
+        </div>
+
+    </div>
+</nav>
+<!--导航条结束-->
+
+
+
+<!--=========栅格布局 ==============-->
+<div class="row">
+    <div class="col-md-2">
+        <!-- tree 的插件 -->
+        <div id="treeDiv"></div>
+    </div>
+
+    <div class="col-md-10">
+        <div style="float:left">代支总额为：<span id="spanId"></span></div>
+
+        <div style="float:right">
+            <form id="formId">
+
+
+                <input type="button" style="float:right;" class="btn btn-default" value="搜索" onclick="search()"/>
+                <select class="form-control" style="width:160px;float:right;" id="selId" name="middleOne">
+                    <option value="0">       </option>
+                    <option value="1">账单房号</option>
+                    <option value="2">收款方</option>
+                </select>
+                <input type="text" style="width:160px;float:right;" class="form-control" id="textId" name="middleTwo">
+            </form>
+        </div>
+
+
+        <p></p>
+        <div>
+            <table id="tableId" class="table table-hover"></table>
+        </div>
+
+
+
+    </div>
+
+</div>
+
+
+
+
+</body>
+
+
+<script type="text/javascript">
+    $(function(){
+        findWait();
+        findWaitPriceCount();
+    })
+
+    //条查
+    function  search(){
+        $("#tableId").bootstrapTable("refresh",{
+            "findCharge":{
+                "middleOne":$("#selId").val(),
+                "middleTwo":$("#textId").val(),
+            }
+        });
+
+    }
+
+    function findWait(){
+        $("#tableId").bootstrapTable({
+            url:"../apartment/findWait",
+            method:"post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect:true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect:true,
+            showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "room_id",                 //每一行的唯一标识，一般为主键列
+            showColumns: false,                  //是否显示所有的列
+            showRefresh: false,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType:'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar:'#tabToolBar',   //  工具定义位置
+            columns:[
+
+                {field:'waitNumber',title:'账单房号',width:100},
+
+                {field:'fangDong',title:'收款方',width:100, sortable:true},
+                {field:'waitPrice',title:'账单金额',width:100, sortable:true},
+                {field:'type',title:'账单类型',width:100,
+                    formatter:function(value,row,index){
+                        if(row.type==1){
+                            return "租金";
+                        }
+                        if(row.type==2){
+                            return "押金";
+                        }
+                        if(row.type==3){
+                            return "水费";
+                        }
+                        if(row.type==4){
+                            return "气费";
+                        }
+                        if(row.type==5){
+                            return "电费";
+                        }
+                        if(row.type==6){
+                            return "物业";
+                        }
+                        if(row.type==7){
+                            return "维修";
+                        }
+                        if(row.type==8){
+                            return "定金";
+                        }
+                    },
+                    sortable:true},
+                {field:'date',title:'预计收款时间',width:100, sortable:true},
+                {field:'asd',title:'操作',width:100,
+                    formatter:function(value,row,index){
+                        var str="<button type='button' class='btn btn-SUCCESS' onclick='editDialog("+row.waitId+")'>确认付款</button>";
+                        str +="    <button type='button' class='btn btn-SUCCESS' onclick='findDialog("+row.waitId+")' >更多</button>";
+                        return str;
+                    }
+                }
+            ],
+            //传递参数（*）
+            queryParams: function(params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "middleOne":$("#selId").val(),
+                    "middleTwo":$("#textId").val(),
+                    "rows":params.limit,
+                    "page":params.offset,
+                    //"pro_name":params.search,//精确搜索产品名称
+                }
+                return whereParams;
+            },
+            //前台--排序字段
+            //sortName:'proPrice',
+            //sortOrder:'desc',
+            //前台--搜索框
+            search:false,
+            //启动回车键做搜索功能
+            searchOnEnterKey:true,
+            //分页方式   后台请求的分页方式
+            sidePagination:'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9,12],        //可供选择的每页的行数（*）
+        });
+    }
+
+
+
+    function findWaitPriceCount(){
+        $.ajax({
+            url:'../apartment/findWaitPriceCount',
+            type:'post',
+
+            success:function(data){
+                $("#spanId").html(data);
+            },
+            error:function(){
+                alert("查询代收总额失败");
+            }
+        })
+    }
+
+
+
+
+
+
+    /*
+    *发送ajax请求获取jsp页面内容
+    */
+    function getJspHtml(urlStr){
+        var  jspHtml = "";
+//	 async  (默认: true) 默认设置下，所有请求均为异步请求。如果需要发送同步请求，请将此选项设置为 false。
+//  注意，同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行。
+        $.ajax({
+            url:urlStr,
+            type:'post',
+            //同步的ajax
+            async:false,
+            success:function(data){
+                //alert(data);//data--addProduct.jsp页面内容
+                jspHtml = data;
+            },
+            error:function(){
+                bootbox.alert("ajax失败");
+            }
+        });
+        return jspHtml;
+    }
+
+
+    function  dialog(HTMLurl,submitUrl,title){
+
+        var dialog = bootbox.dialog({
+            title: title,
+            message: getJspHtml(HTMLurl),   //调用方法
+            buttons:{
+                "save":{
+                    label: '确认收款',
+                    //自定义样式
+                    className: "btn btn-SUCCESS",
+                    callback: function() {
+                        $.ajax({
+                            url:submitUrl,
+                            type:'post',
+                            data:$("#logForm").serialize(),
+                            success:function(data){
+                                bootbox.alert("保存成功");
+                                $("#tableId").bootstrapTable('refresh');
+                            },
+                            error:function(){
+                                bootbox.alert("ajax失败");
+                            }
+                        });
+                    }
+                },
+                "unSave":{
+                    label: '取消',
+                    //自定义样式
+                    className: "btn btn-SUCCESS",
+                    callback: function() {
+                        // return false;  //dialog不关闭
+                    }
+                }
+            }
+        });
+    }
+
+    function editDialog(id){
+        //var id=	$("[name='chk']:checked").val(); findDialog
+        dialog("../apartment/toPage?id="+id,"../apartment/addAlready");
+    }
+
+
+    function findDialog(id){
+
+        dialog("../apartment/toFindPage?id="+id,"../apartment/updateUser");
+    }
+
+
+
+
+</script>
+
+</html>

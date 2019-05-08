@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table id="bootContact"></table>
+<table id="bootContractinfo"></table>
+<table id="bootCost"></table>
+
+<input type="hidden" th:value="${id}" id="id">
+</body>
+<script type="text/javascript">
+var id=$("#id").val();
+$(function(){
+    findContact(id);
+    findContractinfo(id);
+    findCost(id);
+})
+
+     //查询联系人
+     function findContact(id){
+
+        $("#bootContact").bootstrapTable({
+            url: "findContact?id="+id,
+            method: "post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect: true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect: true,
+            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "newsId",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType: 'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar: '#tabToolBar',   //  工具定义位置
+            columns: [
+                {field: 'zname', title: '联系人', width: 100},
+                {field: 'phone', title: '联系电话', width: 100},
+                {field: 'identity', title: '身份证号码', width: 100},
+                {field: 'urgentname', title: '紧急联系人', width: 100},
+                {field: 'urgentphone', title: '紧急联系人电话', width: 100},
+            ],
+            //传递参数（*）
+            queryParams: function (params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize": params.limit,
+                    "start": params.offset,
+
+
+                }
+                return whereParams;
+            },
+            //前台--搜索框
+            search: true,
+            //启动回车键做搜索功能
+            searchOnEnterKey: true,
+            //分页方式   后台请求的分页方式
+            sidePagination: 'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9, 12],        //可供选择的每页的行数（*）
+        })
+    }
+
+
+    //查询合同信息
+    function findContractinfo(id){
+
+        $("#bootContractinfo").bootstrapTable({
+            url: "findContractinfo?id="+id,
+            method: "post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect: true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect: true,
+            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "newsId",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType: 'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar: '#tabToolBar',   //  工具定义位置
+            columns: [
+                {field: 'contractroom', title: '房源地址', width: 100},
+                {field: 'start_end_time', title: '起始时间', width: 100},
+                {field: 'rent', title: '租金', width: 100},
+                {field: 'deposit', title: '押金', width: 100},
+                {field: 'paymethod', title: '房租支付方式', width: 100},
+            ],
+            //传递参数（*）
+            queryParams: function (params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize": params.limit,
+                    "start": params.offset,
+
+
+                }
+                return whereParams;
+            },
+            //前台--搜索框
+            search: true,
+            //启动回车键做搜索功能
+            searchOnEnterKey: true,
+            //分页方式   后台请求的分页方式
+            sidePagination: 'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9, 12],        //可供选择的每页的行数（*）
+        })
+
+    }
+
+
+    //查询费用
+    function findCost(id){
+        $("#bootCost").bootstrapTable({
+            url: "findCost?id="+id,
+            method: "post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect: true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect: true,
+            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "newsId",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType: 'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar: '#tabToolBar',   //  工具定义位置
+            columns: [
+                {field: 'water_meter', title: '水表度数', width: 100},
+                {field: 'electric_meter', title: '电表度数', width: 100},
+                {field: 'gas_meter', title: '气表度数', width: 100},
+            ],
+            //传递参数（*）
+            queryParams: function (params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize": params.limit,
+                    "start": params.offset,
+
+
+                }
+                return whereParams;
+            },
+            //前台--搜索框
+            search: true,
+            //启动回车键做搜索功能
+            searchOnEnterKey: true,
+            //分页方式   后台请求的分页方式
+            sidePagination: 'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9, 12],        //可供选择的每页的行数（*）
+        })
+
+    }
+
+</script>
+</html>

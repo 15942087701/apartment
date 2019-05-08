@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script type="text/javascript" src="../js/jquery-1.8.0.js"></script>
+<!-- my97 -->
+<link rel="stylesheet" href="../js/my97/skin/WdatePicker.css">
+<script src="../js/my97/WdatePicker.js"></script>
+
+<!-- 引入bootstrap的css -->
+<link href="../js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!-- 引入bootstrap-treeview的css -->
+<link href="../js/treeview/bootstrap-treeview.min.css" rel="stylesheet">
+<!-- 引入bootstrap-addTabs的css -->
+<link href="../js/addTabs/addTabs.css" rel="stylesheet">
+<!-- 引入bootstrap-table的css -->
+<link href="../js/table/bootstrap-table.min.css" rel="stylesheet">
+<!-- 引入fileinput的css -->
+<link type="text/css" rel="stylesheet" href="../js/fileinput/css/fileinput.min.css"/>
+<!-- 引入jquery -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/bootstrap/js/bootstrap.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/treeview/bootstrap-treeview.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/addTabs/addTabs.js"></script>
+<!-- 引入bootstrap-table的js-->
+<script type="text/javascript" src="../js/table/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="../js/table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!-- 引入bootbox.js -->
+<script type="text/javascript" src="../js/bootbox/bootbox.js"></script>
+<!-- 引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/fileinput.min.js"></script>
+<!--  引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/locales/zh.js"></script>
+
+<script type="text/javascript" src="../js/fileinput/themes/fa/theme.js"></script>
+
+<body>
+<!-- 房东信息数据表格 landlord information-->
+<table id="LandlordInformationTab"></table>
+<!-- 房源信息表格 Housing information-->
+<table id="HousingInformationTab"></table>
+<!--合同信息表格  contract information-->
+<table id="ContractInformationTab"></table>
+<!--费用结算表格 Cost settlement-->
+<table id="CostSettlementTab"></table>
+
+<!--房东合同ID-->
+<input type="hidden" th:value="${id}" id="id">
+</body>
+<script type="text/javascript">
+    var id = $("#id").val();
+    $(function (){
+        findLandlordInformation(id);
+        findHousingInformation(id);
+        findContractInformation(id);
+        findCostSettlement(id);
+
+    })
+    //房东信息查询
+    function findLandlordInformation(id){
+
+        $("#LandlordInformationTab").bootstrapTable({
+            url:"findLandlordInformation?id="+id,
+            method:"post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect:true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect:true,
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "newsId",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType:'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar:'#tabToolBar',   //  工具定义位置
+            columns:[
+                {field:'id',title:'id',width:100},
+                {field:'name',title:'房东姓名', width:100},      //  列    field   代表是 后台  传过来的值
+                {field:'phone',title:'联系方式',width:100},
+                {field:'id_number',title:'身份证号码',width:100},
+                {field:'emergency_contact',title:'紧急联系人',width:100},
+                {field:'emergency_contact_information',title:'联系方式',width:100}
+            ],
+            //传递参数（*）
+            queryParams: function(params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize":params.limit,
+                    "start":params.offset,
+
+
+                }
+                return whereParams;
+            },
+            //前台--搜索框
+            search:true,
+            //启动回车键做搜索功能
+            searchOnEnterKey:true,
+            //分页方式   后台请求的分页方式
+            sidePagination:'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9,12],        //可供选择的每页的行数（*）
+        });
+    }
+
+    //房源信息查询  findHousingInformation
+    function findHousingInformation(id){
+        $("#HousingInformationTab").bootstrapTable({
+            url:"findHousingInformation?id="+id,
+            method:"post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect:true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect:true,
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "newsId",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType:'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar:'#tabToolBar',   //  工具定义位置
+            columns:[
+                {field:'id',title:'id',width:100},
+                {field:'housing_location',title:'房源位置', width:100},      //  列    field   代表是 后台  传过来的值
+                {field:'floor_area',title:'房源建筑面积',width:100},
+                {field:'housing_family',title:'房源户型',width:100},
+                {field:'housing_conditions',title:'房源状况',width:100},
+            ],
+            //传递参数（*）
+            queryParams: function(params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize":params.limit,
+                    "start":params.offset,
+
+
+                }
+                return whereParams;
+            },
+            //前台--搜索框
+            search:true,
+            //启动回车键做搜索功能
+            searchOnEnterKey:true,
+            //分页方式   后台请求的分页方式
+            sidePagination:'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9,12],        //可供选择的每页的行数（*）
+        });
+    }
+
+    //合同信息查询  findContractInformation
+    function findContractInformation(id){
+        $("#ContractInformationTab").bootstrapTable({
+            url:"findContractInformation?id="+id,
+            method:"post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect:true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect:true,
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "newsId",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType:'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar:'#tabToolBar',   //  工具定义位置
+            columns:[
+                {field:'id',title:'id',width:100},
+                {field:'start_end_time',title:'合同起止日期', width:100},      //  列    field   代表是 后台  传过来的值
+                {field:'the_rent',title:'租金',width:100},
+                {field:'the_deposit',title:'押金',width:100},
+                {field:'decorate',title:'装修空置期',width:100},
+                {field:'free',title:'免租期',width:100},
+                {field:'payment_method',title:'房租支付方式',width:100},
+            ],
+            //传递参数（*）
+            queryParams: function(params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize":params.limit,
+                    "start":params.offset,
+
+
+                }
+                return whereParams;
+            },
+            //前台--搜索框
+            search:true,
+            //启动回车键做搜索功能
+            searchOnEnterKey:true,
+            //分页方式   后台请求的分页方式
+            sidePagination:'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9,12],        //可供选择的每页的行数（*）
+        });
+        
+    }
+
+    //合同信息查询 findCostSettlement
+    function findCostSettlement(id){
+        $("#CostSettlementTab").bootstrapTable({
+            url:"findCostSettlement?id="+id,
+            method:"post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect:true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect:true,
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "newsId",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType:'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar:'#tabToolBar',   //  工具定义位置
+            columns:[
+                {field:'id',title:'id',width:100},
+                {field:'water_meter',title:'水表度数', width:100},      //  列    field   代表是 后台  传过来的值
+                {field:'electric_meter',title:'电表度数',width:100},
+                {field:'gas_meter',title:'气表度数',width:100},
+                {field:'property',title:'物业费',width:100},
+
+            ],
+            //传递参数（*）
+            queryParams: function(params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize":params.limit,
+                    "start":params.offset,
+
+
+                }
+                return whereParams;
+            },
+            //前台--搜索框
+            search:true,
+            //启动回车键做搜索功能
+            searchOnEnterKey:true,
+            //分页方式   后台请求的分页方式
+            sidePagination:'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9,12],        //可供选择的每页的行数（*）
+        });
+        
+    }
+
+
+
+</script>
+</html>

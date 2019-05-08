@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="logForm">
+    <div name="adds">
+        <input type="hidden"   name="roomId"  th:value="${charge.room_id}">
+        <input type="hidden"   name="roomName" th:value="${charge.room_number}"/>
+        <input type="hidden"   name="waitId" th:value="${charge.waitId}"/>
+        <div class="form-group">
+            <label>实付金额</label>
+            <input type="text" style="width:80px" name="roomPrice"  id="proName">
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <label>应付金额</label>&nbsp;&nbsp;&nbsp;
+            <input type="hidden"   id="hiId"  th:value="${charge.room_price}">
+            <span id="spanIdOne"></span>
+
+        </div>
+
+        <div class="form-group">
+            <label>收款方式</label>
+            <select name="roomFangShi" style="width:80px;height:30px">
+                <option value="1">现金</option>
+                <option value="2">微信</option>
+                <option value="3">支付宝</option>
+            </select>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label>收款时间</label>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span id="spanIdTwo" name="roomDate"></span>
+        </div>
+
+        <div class="form-group">
+            <label>备注</label>
+            <textarea name="roomText"></textarea>
+        </div>
+
+
+
+
+
+
+    </div>
+</form>
+</body>
+
+<script type="text/javascript">
+
+    $(function(){
+        updatePrice();
+        updateDate();
+    })
+
+    function updatePrice() {
+
+        var str=$("#hiId").val();
+        $("#proName").val(str);
+        $("#spanIdOne").html(str);
+
+    }
+
+
+    function updateDate(){
+
+        var str=new Date();
+        var dd = str.getDate();
+        var mm = str.getMonth()+1; //一月是0，一定要注意
+        var yyyy = str.getFullYear();
+        if(dd<10) {
+            dd='0'+dd
+        }
+        if(mm<10) {
+            mm='0'+mm
+        }
+        str=yyyy+'/'+mm+'/'+dd;
+        $("#spanIdTwo").html(str);
+
+    }
+
+
+</script>
+
+
+</html>

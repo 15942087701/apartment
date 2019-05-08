@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jk.mapper.ApartmentMapper">
+<update id="dropout">
+    update apartment_user set endtime=null where accounts=#{accounts}
+</update>
+<!-- 张引胜 -->
+    <select id="referuser" resultType="com.jk.model.UserModel">
+      select * from apartment_user a inner join user_job u on a.userId=u.userid
+      inner join job j on u.jobid=j.jobid
+      where accounts=#{accounts} and userPassWord=#{userPassWord}
+    </select>
+
+    <select id="positioncount" resultType="java.lang.Long">
+      select count(*) from job
+    </select>
+
+    <select id="refer" resultType="com.jk.model.UserModel">
+      select * from apartment_user limit #{start},#{pageSize}
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+      select count(*) from apartment_user
+    </select>
+
+    <delete id="deleteuser">
+    delete from apartment_user where userId=#{sid}
+    </delete>
+
+    <insert id="saveuser">
+        insert into apartment_user (userName,userPhone,userPassWord,accounts) values
+        (
+        #{userName},#{userPhone},#{userPassWord},#{accounts}
+        )
+    </insert>
+
+    <select id="saverefer" resultType="com.jk.model.UserModel">
+        select * from apartment_user where userName=#{userName}
+    </select>
+
+    <insert id="savejob">
+        insert into user_job (userid,jobid) values (#{userId},#{userIdentity})
+    </insert>
+
+    <select id="toupdate" resultType="com.jk.model.UserModel">
+        select * from apartment_user where userId=#{xid}
+    </select>
+
+    <update id="updateuser">
+        update apartment_user set userName=#{userName},userPhone=#{userPhone},userPassWord=##{userPassWord}
+        where userId=#{userId}
+    </update>
+
+    <select id="referposition" resultType="com.jk.model.JobModel">
+      select *  from job
+    </select>
+
+    <delete id="deletejob">
+        delete from job where jobid=#{sid}
+    </delete>
+
+    <select id="referpositiontwo" resultType="com.jk.model.JobModel">
+      select *  from job
+    </select>
+     <!-- 赵苑辰 -->
+    <!--查询房东-->
+    <select id="findLandlord" resultType="com.jk.model.LandlordBean">
+      select * from t_landlord limit #{start},#{pageSize}
+    </select>
+
+    <select id="findLandlordInformation" resultType="com.jk.model.LandlordInformationBean">
+      select * from t_landlord_information where landlord_id = #{id} limit #{start},#{pageSize}
+    </select>
+
+    <select id="findHousingInformation" resultType="com.jk.model.HousingInformationBean">
+      select * from t_housing_information where landlord_id = #{id} limit #{start},#{pageSize}
+    </select>
+
+    <select id="findContractInformation" resultType="com.jk.model.ContractInformationBean">
+      select * from t_contract_information where landlord_id = #{id} limit #{start},#{pageSize}
+    </select>
+
+    <select id="findCostSettlement" resultType="com.jk.model.CostSettlemenBean">
+      select * from t_cost_settlemen where landlord_id = #{id} limit #{start},#{pageSize}
+    </select>
+
+    <select id="clearRefund" resultType="com.jk.model.Contractzuke">
+      select * from contract_information where contractroom = '${address}'
+
+    </select>
+
+    <select id="findqingtui" resultType="com.jk.model.LandlordBean">
+      select * from t_landlord where id = 1 limit #{start},#{pageSize}
+    </select>
+    <!-- 刘瑞广 -->
+    <select id="findcontract" resultType="com.jk.model.Contractzuke">
+        select * from zkcontract limit #{start},#{pageSize}
+    </select>
+
+    <select id="findContact" resultType="com.jk.model.Contact">
+        select * from contract_contact where Tenantid=#{id} limit #{start},#{pageSize}
+    </select>
+
+    <select id="findContractinfo" resultType="com.jk.model.Contract">
+        select * from contract_information where Tenantid=#{id} limit #{start},#{pageSize}
+    </select>
+
+    <select id="findCost" resultType="com.jk.model.Cost">
+        select * from contract_cost where Tenantid=#{id} limit #{start},#{pageSize}
+    </select>
+
+    <select id="findIncome" resultType="com.jk.model.Income">
+        select * from t_billinfor b inner join t_payinfor p on b.pid=p.payid
+        <if test="income!=null and income.minDate !=null ">
+            and p.paytime &gt; #{income.minDate}
+        </if>
+        <if test="income!=null and income.maxDate !=null ">
+            and p.paytime &lt; #{income.maxDate}
+        </if>
+        limit #{start},#{pageSize}
+    </select>
+    <!-- 刘君宜 -->
+    <!--房东确认收款后，将待支付表中数据删除-->
+    <delete id="deleteWait">
+        delete  from t_wait where waitId=#{waitId}
+    </delete>
+
+
+    <!--代收账单长度查询-->
+    <select id="findChargeCount" resultType="java.lang.Integer">
+        select count(*) from t_charge where status=1
+    </select>
+
+    <!--代收账单数据查询  账单房号-->
+    <select id="findChargeDataOne" resultType="com.jk.model.Charge">
+        select * from t_charge where status=1 and
+        room_number like concat('%',concat(#{middleTwo},'%'))
+        limit #{page},#{rows}
+    </select>
+
+    <!--代收账单数据查询  付款方-->
+    <select id="findChargeDataTwo" resultType="com.jk.model.Charge">
+        select * from t_charge where status=1 and
+        room_payer like concat('%',concat(#{middleTwo},'%'))
+        limit #{page},#{rows}
+    </select>
+
+    <!--代收账单数据查询  直接查询-->
+    <select id="findChargeDataThree" resultType="com.jk.model.Charge">
+        select * from t_charge where status=1
+        limit #{page},#{rows}
+    </select>
+
+    <!--页面顶部代收总额查询-->
+    <select id="findPriceCount" resultType="java.lang.Integer">
+        select sum(room_price) from t_charge where status=1
+    </select>
+
+    <!--确认收款-->
+    <update id="updateStatus">
+        update t_charge set status=2 where room_id=#{room_id}
+    </update>
+
+    <!--房东确认收款后，将待支付表状态改为二-->
+    <update id="updateWaitStatus">
+        update t_wait set status=2 where waitId=#{room_id}
+    </update>
+
+    <!--确认收款打开弹框-->
+    <select id="findChargeById" resultType="com.jk.model.Charge">
+        select * from t_charge where room_id =#{id}
+    </select>
+
+
+    <!--新增已经收款名单-->
+    <insert id="addAlready">
+        insert into t_already(roomId,roomName,roomPrice,roomFangShi,roomText,roomDate)values(#{already.roomId},#{already.roomName},#{already.roomPrice},#{already.roomFangShi},#{already.roomText},#{date})
+    </insert>
+
+
+    <!--待支付页面顶部代支付总额查询-->
+    <select id="findWaitPriceCount" resultType="java.lang.Integer">
+        select sum(waitPrice) from t_wait where status=1
+    </select>
+
+    <!--代支付账单长度查询-->
+    <select id="findWaitCount" resultType="java.lang.Integer">
+        select count(*) from t_wait where status=1
+    </select>
+
+
+    <!--代支付账单数据查询  账单房号-->
+    <select id="findWaitOne" resultType="com.jk.model.Wait">
+        select * from t_Wait where status=1 and
+        waitNumber like concat('%',concat(#{middleTwo},'%'))
+        limit #{page},#{rows}
+    </select>
+
+    <!--代收账单数据查询  付款方-->
+    <select id="findWaitTwo" resultType="com.jk.model.Wait">
+        select * from t_Wait where status=1 and
+        fangdong like concat('%',concat(#{middleTwo},'%'))
+        limit #{page},#{rows}
+    </select>
+
+    <!--代收账单数据查询  直接查询-->
+    <select id="findWaitThree" resultType="com.jk.model.Wait">
+        select * from t_Wait where status=1
+        limit #{page},#{rows}
+    </select>
+</mapper>

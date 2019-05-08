@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="/js/jquery-1.9.1.min.js"></script>
+<!-- 引入bootstrap的css -->
+<link  href="/js/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+<!-- 引入bootstrap-treeview的css -->
+<link  href="/js/treeview/bootstrap-treeview.min.css" rel="stylesheet" >
+<!-- 引入bootstrap-addTabs的css -->
+<link  href="/js/addTabs/addTabs.css" rel="stylesheet" >
+<!-- 引入bootstrap-table的css -->
+<link  href="/js/table/bootstrap-table.min.css" rel="stylesheet" >
+<!-- 引入fileinput的css -->
+<link type="text/css" rel="stylesheet" href="/js/fileinput/css/fileinput.min.css" />
+
+
+
+
+<!-- 引入my97 -->
+<script type="text/javascript" src="/js/my97/WdatePicker.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="/js/bootstrap/js/bootstrap.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="/js/treeview/bootstrap-treeview.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="/js/addTabs/addTabs.js"></script>
+<!-- 引入bootstrap-table的js-->
+<script type="text/javascript" src="/js/table/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="/js/table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!-- 引入bootbox.js -->
+<script type="text/javascript" src="/js/bootbox/bootbox.js"></script>
+<!-- 引入fileinput的js -->
+<script type="text/javascript" src="/js/fileinput/js/fileinput.min.js"></script>
+<!--  引入fileinput的js -->
+<script type="text/javascript" src="/js/fileinput/js/locales/zh.js"></script>
+
+
+<script type="text/javascript" src="/js/fileinput/themes/fa/theme.js"></script>
+<body>
+
+
+
+<div style="float: right">
+    <button type="button" class="btn btn-info btn-lg" onclick="add()">添加子账户</button>
+</div>
+
+<table id="tableid"></table>
+</body>
+<script type="text/javascript">
+
+    $(function (){
+
+        $("#tableid").bootstrapTable({
+
+            url:"../apartment/refer",
+            method:"post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect:true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect:true,
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "eventId",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,
+            //是否显示刷新按钮
+            responseHandler:function(ref){
+
+                alert(ref.rows)
+                return {
+                    "total":ref.total,
+                    "rows":ref.rows
+                }
+
+            },
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType:'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar:'#tabToolBar',   //  工具定义位置
+            columns:[
+                /*{field:'xx',title:'',width:50,
+                    formatter:function(value,row,index){   //  格式化  当前单元格内容
+                        return "<input type='checkbox' value="+value+" name='chk'/>";
+                    }
+                },*/
+                {field:'userName',title:'使用人',width:100},
+                {field:'accounts',title:'账号',width:100},
+                {field:'userPhone',title:'手机号',width:100},
+                {field:'jobname',title:'职位',
+               /*     formatter:function(value,row,index){
+                    var str="";
+                        if(row.userIdentity==1){
+                            str="管家";
+                        }
+                        if (row.userIdentity==2){
+                            str="超级管理员";
+                        }
+                    return str;
+
+                },*/
+
+                    width:100},
+                {field:'commentDate',title:'最后登陆时间',width:100,
+                  /*    formatter:function(value,row,index){//value 当前字段值  row当前行的数据  index当前行
+                        var simfomat = new Date();
+                        simfomat.setTime(value);   //转换时间
+                        return  simfomat.toLocaleDateString();
+                    }*/
+                },
+
+/*                {field:'Imgsrc',title:'图片',width:100,
+                    formatter: function (value,row,index){
+                        return "<img  width='80' height='80' class='img-thumbnail' src='../book/findImgById?imgId="+value+"' />" ;
+                    }},*/
+                {field:'xxx',title:'操作',width:100,
+                    formatter:function(value,row,index){//value 当前字段值  row当前行的数据  index当前
+                        var str = "<button type='button'  class='btn btn-info btn-lg' onclick='updateuser("+row.userId+")'>修改</button>";
+                        str += "<button type='button'  class='btn btn-info btn-lg' onclick='deleteuser("+row.userId+")'>删除</button>";
+                        return  str;
+                    }
+                }
+            ],
+            //传递参数（*）
+            queryParams: function(params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize":params.limit,
+                    "start":params.offset,
+                   /* "upOrDown":params.search,//精确搜索产品名称
+                    "upOrDown":$("#proName").val(),*/
+                }
+                return whereParams;
+            },
+            //前台--排序字段
+            //sortName:'proPrice',
+            //sortOrder:'desc',
+            //前台--搜索框
+            search:true,
+            //启动回车键做搜索功能
+            searchOnEnterKey:true,
+            //分页方式   后台请求的分页方式
+            sidePagination:'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9,12],        //可供选择的每页的行数（*）
+        });
+    })
+
+    function add(){
+        location.href="../apartment/tosaveandupdate";
+    }
+
+    function deleteuser(sid){
+    $.ajax({
+        url:"../apartment/deleteuser",
+        data:"{sid:sid}",
+        success:function(){
+
+
+            alert("删除成功");
+            $("#tableid").bootstrapTable('refresh');
+        },error:function(){
+            alert("删除失败");
+    }
+
+    })
+    }
+
+    function updateuser(xid){
+        location.href="../apartment/toupdate?xid="+xid;
+    }
+</script>
+</html>

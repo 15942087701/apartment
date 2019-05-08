@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script type="text/javascript" src="../js/jquery-1.8.0.js"></script>
+<!-- my97 -->
+<link rel="stylesheet" href="../js/my97/skin/WdatePicker.css">
+<script src="../js/my97/WdatePicker.js"></script>
+
+<!-- 引入bootstrap的css -->
+<link href="../js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!-- 引入bootstrap-treeview的css -->
+<link href="../js/treeview/bootstrap-treeview.min.css" rel="stylesheet">
+<!-- 引入bootstrap-addTabs的css -->
+<link href="../js/addTabs/addTabs.css" rel="stylesheet">
+<!-- 引入bootstrap-table的css -->
+<link href="../js/table/bootstrap-table.min.css" rel="stylesheet">
+<!-- 引入fileinput的css -->
+<link type="text/css" rel="stylesheet" href="../js/fileinput/css/fileinput.min.css"/>
+<!-- 引入jquery -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/bootstrap/js/bootstrap.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/treeview/bootstrap-treeview.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/addTabs/addTabs.js"></script>
+<!-- 引入bootstrap-table的js-->
+<script type="text/javascript" src="../js/table/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="../js/table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!-- 引入bootbox.js -->
+<script type="text/javascript" src="../js/bootbox/bootbox.js"></script>
+<!-- 引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/fileinput.min.js"></script>
+<!--  引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/locales/zh.js"></script>
+
+<script type="text/javascript" src="../js/fileinput/themes/fa/theme.js"></script>
+
+<body>
+<table id="bootTab"></table>
+
+
+<form id="queryForm" method="post" enctype="multipart/form-data">
+
+</form>
+</body>
+<script type="text/javascript">
+
+    $(function () {
+
+        $("#bootTab").bootstrapTable({
+            url: "findcontract",
+            method: "post",
+            striped: true,  	// 斑马线效果     默认false
+            //只允许选中一行
+            singleSelect: true,
+            //选中行是不选中复选框或者单选按钮
+            clickToSelect: true,
+            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            uniqueId: "newsId",                 //每一行的唯一标识，一般为主键列
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,     //  最少留两列
+            detailView: false,                  //是否显示父子表
+            //发送到服务器的数据编码类型
+            contentType: 'application/x-www-form-urlencoded;charset=UTF-8',   //数据编码纯文本  offset=0&limit=5
+            toolbar: '#tabToolBar',   //  工具定义位置
+            columns: [
+                {field: 'zname', title: '租客姓名', width: 100},
+                {field: 'contractroom', title: '房源地址', width: 100},
+                {field: 'contractroomnumber', title: '房号', width: 100},
+                {field: 'starttime', title: '开始时间', width: 100},
+                {field: 'endtime', title: '截止时间', width: 100},
+                {field: 'status', title: '状态',
+                    formatter:function(value,row,index){
+                    var str="";
+                    if (row.status==1){
+                        str="正常";
+                    }
+                    return str;
+                    },
+                    width: 100},
+                {field: 'xxx', title: '操作',
+                    formatter:function(value,row,index){
+                    var str="";
+                    str+="<button type='button'  class='btn btn-info btn-lg' onclick='findAll("+row.zcid+")'>查看详情</button>";
+                    return str;
+                    },
+                    width: 100},
+            ],
+            //传递参数（*）
+            queryParams: function (params) {
+                var whereParams = {
+                    /*
+                        分页  自定义的参数         默认传 limit（展示几条）    offset（从第几条开始    起始条数）
+                    */
+                    "pageSize": params.limit,
+                    "start": params.offset,
+
+
+                }
+                return whereParams;
+            },
+            //前台--搜索框
+            search: true,
+            //启动回车键做搜索功能
+            searchOnEnterKey: true,
+            //分页方式   后台请求的分页方式
+            sidePagination: 'server',
+            pagination: true,                   //是否显示分页（*）
+            pageNum: 1,                       //每页的记录行数（*）
+            pageSize: 3,                       //每页的记录行数（*）
+            pageList: [3, 6, 9, 12],        //可供选择的每页的行数（*）
+        });
+
+
+    })
+
+    //查看详情  findAll
+    function findAll(id){
+
+        dialog("../apartment/findAll?id="+id,"../apartment/add?id="+id,"查看详情");
+
+    }
+
+    //新增
+    function  dialog(HTMLurl,submitUrl,title){
+        var dialog = bootbox.dialog({
+            title: title,
+            //dialog的内容 message
+            message: getJspHtml(HTMLurl),   //调用方法  (发送ajax请求获取  bootstarpDialog.jsp 的 页面内容)
+            buttons:{
+                "unSave":{  //unSave  不保存
+                    label: '取消',
+                    //自定义样式
+                    className: "btn-info",
+                    callback: function() {
+
+                        // return false;  //dialog不关闭
+                    }
+                }
+            }
+        });
+    }
+    // 新增   发送ajax请求获取jsp页面内容
+    function getJspHtml(HTMLurl){
+        alert("getJspHtml(HTMLurl)查看详情的--------------"+HTMLurl);
+        var  jspHtml = "";
+        $.ajax({
+            url :HTMLurl,// 弹框里是：  /test/project/addPage.do
+            type : "post",
+            async:false,//需要注意的   应是同步请求
+            success : function (data){
+                //返回的data为     bootstarpDialog.jsp  的页面内容
+                alert("getJspHtml(HTMLurl)------"+data);
+                jspHtml = data;
+            },error : function (){
+                bootbox.alert("ajax失败");
+            }
+        })
+        //将data返回的jsp内容  填充到dialog方法的   message  属性中
+        return jspHtml;
+    }
+
+</script>
+</html>

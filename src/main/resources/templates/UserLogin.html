@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+
+    <!-- 引入bootstrap的css -->
+    <link  href="../js/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <!-- 引入bootstrap-treeview的css -->
+    <link  href="../js/treeview/bootstrap-treeview.min.css" rel="stylesheet" >
+    <!-- 引入bootstrap-addTabs的css -->
+    <link  href="../js/addTabs/addTabs.css" rel="stylesheet" >
+    <!-- 引入bootstrap-table的css -->
+    <link  href="../js/table/bootstrap-table.min.css" rel="stylesheet" >
+    <!-- 引入fileinput的css -->
+    <link type="text/css" rel="stylesheet" href="../js/fileinput/css/fileinput.min.css" />
+
+
+
+
+<!-- 引入jquery -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/bootstrap/js/bootstrap.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/treeview/bootstrap-treeview.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/addTabs/addTabs.js"></script>
+<!-- 引入bootstrap-table的js-->
+<script type="text/javascript" src="../js/table/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="../js/table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!-- 引入bootbox.js -->
+<script type="text/javascript" src="../js/bootbox/bootbox.js"></script>
+<!-- 引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/fileinput.min.js"></script>
+<!--  引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/locales/zh.js"></script>
+
+
+<script type="text/javascript" src="../js/fileinput/themes/fa/theme.js"></script>
+
+
+<style>
+    .divId{
+        width:120px;
+        height:80px;
+        margin-top: 110px;
+    }
+
+</style>
+
+<body background="../img/2.jpg">
+    <center>
+        <table class="table table-hover">
+
+        </table>
+
+        <div class="divId">
+            <img src="../img/image.jpg" style="margin:auto 0px" height="75px" width="80px"/>
+        </div>
+        <div style="width: 150px;height:50px;margin-top: 30px">
+            <form id="userff">
+            <input type="text" name="accounts" style="width:150px;" class="form-control" placeholder="请输入账号">
+            <br/>
+            <input type="text" name="userPassWord" style="width:150px;" class="form-control" placeholder="请输入密码">
+            <br/>
+
+            <input type="button" style="width:73px;" value="短信" onclick="duanXin()" class="btn btn-default"/>
+            <input type="button" style="width:73px;" value="邮箱" onclick="youXiang()" class="btn btn-default"/>
+            <div id="putId"></div>
+            <input type="text" name="code" style="width:150px;" class="form-control" placeholder="验证码">
+            <br/>
+            </form>
+            <input type="button" id="btnId" style="width:150px;" onclick="UserLogin()" value="登录" class="btn btn-default"/>
+            <a href="javascript:forgetPassword()">?忘记密码</a>
+        </div>
+
+
+
+
+
+
+    </center>
+
+</body>
+
+<script type="text/javascript">
+
+    function duanXin(){
+        $("#putId").html("");
+        $("#putId").append("<input type=\"text\" id=\"phoneCodeId\" style=\"width:150px;\" name=\"phoneName\" class=\"form-control\" placeholder=\"请输入手机号\">");
+        $("#putId").append("<input type=\"button\"  style=\"width:150px;\" onclick=\"getphoneCode()\" value=\"获取验证码\" class=\"btn btn-default\"/>");
+    }
+
+    function youXiang(){
+        $("#putId").html("");
+        $("#putId").append("<input type=\"text\" id=\"emailCodeId\" style=\"width:150px;\" name=\"emailName\" class=\"form-control\" placeholder=\"请输入邮箱\">");
+        $("#putId").append("<input type=\"button\" style=\"width:150px;\" onclick=\"getemailCode()\" value=\"获取验证码\" class=\"btn btn-default\"/>");
+    }
+    function getphoneCode(){
+        var phoneName=$("#phoneCodeId").val();
+        $.ajax({
+            url:"../apartment/getphoneCode",
+            type:"post",
+            data:{phoneName:phoneName},
+            success:function(data){
+                if(data=="2"){
+                    alert("一天最多发送3次验证码");
+                }else{
+                    alert("发送成功")
+                }
+            },error:function(){
+                alert("错误！！！");
+            }
+        });
+    }
+    function getemailCode(){
+        var emailName=$("#emailCodeId").val();
+        $.ajax({
+            url:"../apartment/getemailCode",
+            type:"post",
+            data:{emailName:emailName},
+            success:function(data){
+                if(data=="2"){
+                    alert("一天最多发送3次验证码");
+                }else{
+                    alert("发送成功")
+                }
+            },error:function(){
+                alert("错误！！！");
+            }
+        });
+    }
+
+
+
+
+    var key = 1;
+    function demo(){
+
+            $.ajax({
+                url:"../apartment/login",
+                type:"post",
+                data:$("#userff").serialize(),
+                success:function(data){
+                    //1:登录成功 2:验证码错误 3:账号或密码错误
+                    if(data.flg=="1"){
+                        alert("登录成功");
+                        location.href="../apartment/toTreePage?accounts="+data.accounts+"&userPassWord="+data.userPassWord+"&jobId="+data.jobId+"&userName="+data.userName;
+                    }else if(data.flg=="2"){
+                        alert("验证码错误");
+                    }else if(data.flg=="3"){
+                        alert("账号或密码错误");
+
+                    }
+                },error:function(){
+                    alert("错误！！！");
+                }
+            });
+
+        if (key % 2 == 0) {
+            $("#btnId").val("登录中·");
+            setTimeout(function () {
+                $("#btnId").val("登录中··");
+            }, 700)
+            setTimeout(function () {
+                $("#btnId").val("登录中···");
+            }, 1400)
+            setTimeout(function () {
+                $("#btnId").val("登录");
+            }, 2100)
+
+
+
+
+            
+
+
+        }
+    }
+    $("#btnId").click(function () {
+        key = key + 1;
+        demo();
+    })
+
+    function forgetPassword(){
+            location.href="../apartment/toforgetPasswordPage";
+    }
+</script>
+
+</html>

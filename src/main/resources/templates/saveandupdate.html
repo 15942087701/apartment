@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<!-- 引入bootstrap的css -->
+<link  href="../js/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+<!-- 引入bootstrap-treeview的css -->
+<link  href="../js/treeview/bootstrap-treeview.min.css" rel="stylesheet" >
+<!-- 引入bootstrap-addTabs的css -->
+<link  href="../js/addTabs/addTabs.css" rel="stylesheet" >
+<!-- 引入bootstrap-table的css -->
+<link  href="../js/table/bootstrap-table.min.css" rel="stylesheet" >
+<!-- 引入fileinput的css -->
+<link type="text/css" rel="stylesheet" href="../js/fileinput/css/fileinput.min.css" />
+
+
+
+
+<!-- 引入jquery -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/bootstrap/js/bootstrap.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/treeview/bootstrap-treeview.min.js"></script>
+<!-- 引入bootstrap的js-->
+<script type="text/javascript" src="../js/addTabs/addTabs.js"></script>
+<!-- 引入bootstrap-table的js-->
+<script type="text/javascript" src="../js/table/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="../js/table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!-- 引入bootbox.js -->
+<script type="text/javascript" src="../js/bootbox/bootbox.js"></script>
+<!-- 引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/fileinput.min.js"></script>
+<!--  引入fileinput的js -->
+<script type="text/javascript" src="../js/fileinput/js/locales/zh.js"></script>
+
+
+<script type="text/javascript" src="../js/fileinput/themes/fa/theme.js"></script>
+
+<style>
+    .middle{
+        background-color: gray;
+    }
+</style>
+
+<body  class="middle" >
+
+<!--导航条开始-->
+<nav class="navbar navbar-default">
+    <div class="container-fluid" style="float:left">
+        <div class="navbar-header"  >
+            <a class="navbar-brand" style="margin-top:1px" href="#">
+                <img alt="Brand" style="height:23px;width:23px;" src="../img/image.jpg">
+            </a>
+        </div>
+
+    </div>
+    <div style="margin-top:5px;width:15%;height:100%;float:right">
+        <div style="margin-top:5px;float:right;width:180px;height:30px;">
+            <font >欢迎您</font> |&nbsp;&nbsp;&nbsp;<a href="" >退出</a>
+        </div>
+
+    </div>
+</nav>
+<!--导航条结束-->
+
+
+
+<!--=========栅格布局 ==============-->
+<div class="row" style="margin-top: 150px">
+    <div>
+
+        <center>
+            <form id="formid" method="post">
+
+                <p><input type="hidden" name="id" th:value="${user?.userId}"></p>
+
+
+                <p>使用人：  <input type="text"  th:value="${user?.userName}"  name="userName"  placeholder="请输入使用人名称"><p/>
+
+
+                <p>手机号： <input type="text"  th:value="${user?.userPhone}"  name="userPhone"  placeholder="请输入手机号"><p/>
+                <!--样式最后更改-->
+                <p>管家： <select name="userIdentity" style="width: 165px;height: 25px">
+                    <option value="1">管家</option>
+                    <option value="2">超级管理者</option>
+                </select><p/>
+                <p>密码： <input type="text"  th:value="${user?.userPassWord}"  name="userPassWord"  placeholder="请输入密码"><p/>
+                <input type="button" value="确认" onclick="saveuser()" size="6px">
+            </form>
+        </center>
+
+    </div>
+</div>
+
+
+
+
+</body>
+<script type="text/javascript">
+    function saveuser(){
+        var formdata=$("#formid").serialize();
+        alert(formdata);
+        $.ajax({
+            url:"../apartment/saveuser",
+            data:formdata,
+            type:"post",
+            success:function(){
+                alert("成功");
+                location.href="../apartment/toshow";
+            },error:function(){
+                alert("失败");
+            }
+        })
+    }
+</script>
+
+</html>

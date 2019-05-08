@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="logForm">
+    <div name="adds">
+        <font>账单房号:</font>
+        <span id="oneId"></span>
+        <input type="hidden" id="hidOneId" th:value="${one.room_number}"/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <font>付款方:</font>
+        <span id="twoId"></span>
+        <input type="hidden" id="hidTwoId" th:value="${one.room_payer}"/>
+        <br/>
+
+        <font>账单金额:</font>
+        <span id="threeId"></span>
+        <input type="hidden" id="hidThreeId" th:value="${one.room_price}"/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <font>账单类型:</font>
+        <span id="fourId"></span>
+        <input type="hidden" id="hidFourId" th:value="${one.type}"/>
+        <br/>
+
+
+        <font>账单时效:</font>
+        <span id="fiveId"></span>
+        <input type="hidden" id="hidFiveId" th:value="${one.date}"/>
+        <input type="hidden" id="hidSevenId" th:value="${one.endDate}"/>
+        <br/>
+
+        <font>预计付款时间:</font>
+        <span id="sixId"></span>
+        <input type="hidden" id="hidSixId" th:value="${one.date}"/>
+
+
+
+    </div>
+</form>
+</body>
+
+<script type="text/javascript">
+
+    $(function(){
+        updateData();
+
+    })
+
+    function updateData() {
+        var one=$("#hidOneId").val();
+        $("#oneId").html(one);
+
+        var two=$("#hidTwoId").val();
+        $("#twoId").html(two);
+
+        var three=$("#hidThreeId").val();
+        $("#threeId").html(three);
+
+        var four=$("#hidFourId").val();
+        $("#fourId").html(four);
+
+        var five=$("#hidFiveId").val();
+        var seven=$("#hidSevenId").val();
+        $("#fiveId").html(five+'至'+seven);
+
+        var four=$("#hidFourId").val();
+        $("#fourId").html(four);
+
+        var six=$("#hidSixId").val();
+        $("#sixId").html(six);
+    }
+
+
+
+
+</script>
+
+
+</html>

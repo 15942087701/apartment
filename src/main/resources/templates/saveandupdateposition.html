@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+
+
+
+<link rel="stylesheet" href="/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="/ztree/js/jquery.ztree.core.min.js"></script>
+<script type="text/javascript" src="/ztree/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="/ztree/js/jquery.ztree.excheck.min.js"></script>
+
+
+
+<style>
+    .middle{
+       /* background-color: gray;*/
+        background: url(../img/2.jpg) ;
+    }
+</style>
+
+
+<body class="middle">
+<center>
+<p><select id="selectId"></select></p>
+</center>
+<p><ul id="treeDemo" class="ztree" ></ul></p>
+<center>
+    <input type="button" value="确定" onclick="findRoelPower()" size="7px">
+</center>
+</body>
+
+<script type="text/javascript">
+    var settings={    //在setting中做我们树的一些配置    setting  是创建树之前的要干的事情
+        check:{   //复选框  配置
+            enable: true,    //  开启 复选框
+        },
+        data: {				//  data 中  是一些基础信息
+            key:{
+                name: "text",   //    默认 是name
+                //url:"uri",
+                //abc:"uriTab"
+            },
+            simpleData: {    	 //简单数据设置
+                enable: true,	//简单数据开启  默认为false
+                idKey: "id",  		// 指定 那个是id 可以自定义
+                pIdKey: "pid",  //  那个是父节点	可以自定义
+                rootPId: -1   	//  将几定义为父节点	可以自定义
+            }
+        },
+        view:{              //显示的设置
+            selectedMulti:false, //是否允许多个被选中
+            nameIsHTML: true,  //支持HTML  格式
+        },
+        callback:{  	// 回掉函数   的设置
+            onClick:function (event,treeId,treeNode){  // event 设置的对象   treeId  标签的id  treeNode该节点的所有参数
+                alert(event+"~~~"+treeId+"~~~~~"+treeNode.uriTabs);
+            }
+        }
+    }
+
+    //页面加载事件
+    $(document).ready(function(){
+        $.ajax({
+            type:"post",
+            url:"../apartment/findMenu",
+            dataType:"json",
+            success:function (msg){
+                var treeObj=$.fn.zTree.init($("#treeDemo"), settings,msg);
+
+            }
+        });
+    })
+
+    $(function(){
+        $.ajax({
+            url:"../apartment/referpositiontwo",
+            type:"post",
+            success:function(data){
+                var str = "<option value='0'>请选择</option>";
+                for(var i=0;i<data.length;i++){
+                    str += "<option value='"+data[i].jobid+"'>"+data[i].jobname+"</option>";
+                }
+
+                $("#selectId").html(str);
+
+
+            },error:function(){
+                alert("获取角色失败");
+            }
+        })
+    })
+
+
+    //roelPower  角色赋权限
+             function findRoelPower(){
+                 var roelid=$("#selectId").val();
+                 alert(roelid);
+
+                    //专门提供的根据 treeId 获取 zTree 对象的方法。
+                    var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                    //获取输入框被勾选 的节点集合
+                    var nodes = treeObj.getCheckedNodes(true);
+                    //获取选中的权限ID
+                    var powerIds="";
+                    $.each(nodes,function (index,obj){
+                        powerIds+=obj.id+",";
+                    });
+                    alert("选中的权限ID----"+powerIds);
+                    //alert(roleid);
+                    $.ajax({
+                        type:"post",
+                        url:"../apartment/saveRolePower",
+                        data:{
+                            "roleid":roleid,
+                            "powerIds":powerIds
+                        },
+                        success:function (msg){
+                            $.messager.alert('我的消息','提交成功！','info');
+                            $("#roelPowerDialog").dialog("close");
+                            $('#roleTable').datagrid("load");
+                        }
+                    })
+    }
+
+</script>
+</html>
