@@ -19,4 +19,5 @@ public class BillInfor {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date expectedtime;  //预计付款时间
+    private String billaging;  //账单时效
 }

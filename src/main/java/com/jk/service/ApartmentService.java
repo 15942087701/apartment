@@ -75,6 +75,11 @@ public interface ApartmentService {
     HashMap<String,Object> findCost(Integer start, Integer pageSize, Integer id);
 
     HashMap<String,Object> findIncome(Income income, Integer start, Integer pageSize);
+
+    HashMap<String,Object> findbill(Integer start, Integer pageSize, Integer id);
+
+    HashMap<String,Object> findpay(Integer start, Integer pageSize, Integer id);
+
     //刘军宜
     HashMap<String,Object> findCharge(Integer page, Integer rows, Charge charge);
 

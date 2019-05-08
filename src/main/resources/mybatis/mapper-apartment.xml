@@ -122,6 +122,17 @@
         </if>
         limit #{start},#{pageSize}
     </select>
+
+
+
+    <select id="findbill" resultType="com.jk.model.BillInfor">
+        select * from t_billinfor where incomeid=#{id} limit #{start},#{pageSize}
+    </select>
+
+    <select id="findpay" resultType="com.jk.model.PayInfor">
+        select * from t_payinfor where incomeid=#{id} limit #{start},#{pageSize}
+    </select>
+
     <!-- 刘君宜 -->
     <!--房东确认收款后，将待支付表中数据删除-->
     <delete id="deleteWait">

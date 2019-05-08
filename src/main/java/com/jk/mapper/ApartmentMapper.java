@@ -125,10 +125,23 @@ public interface ApartmentMapper {
 
     List<Cost> findCost(@Param("start") Integer start,@Param("pageSize") Integer pageSize,@Param("id") Integer id);
 
+    //
     @Select("select count(1) from t_billinfor")
     Long findSumSize();
 
     List<Income> findIncome(@Param("income") Income income,@Param("start") Integer start,@Param("pageSize") Integer pageSize);
+
+    //
+    @Select("select count(1) from t_billinfor")
+    Long findSumSizeTwo();
+
+    List<BillInfor> findbill(@Param("start") Integer start,@Param("pageSize") Integer pageSize,@Param("id") Integer id);
+
+    //
+    @Select("select count(1) from t_payinfor")
+    Long findSumSizeThree();
+
+    List<PayInfor> findpay(@Param("start") Integer start,@Param("pageSize") Integer pageSize,@Param("id") Integer id);
 //刘俊宜
 
     Integer findChargeCount();

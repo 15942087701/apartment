@@ -252,6 +252,26 @@ public HashMap<String, Object> findcontract(Contractzuke contract, Integer start
         hashMap.put("rows",list);
         return hashMap;
     }
+
+    @Override
+    public HashMap<String, Object> findbill(Integer start, Integer pageSize, Integer id) {
+        Long sumSize=apartmentMapper.findSumSizeTwo();
+        List<BillInfor> list=apartmentMapper.findbill(start,pageSize,id);
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("total",sumSize);
+        hashMap.put("rows",list);
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, Object> findpay(Integer start, Integer pageSize, Integer id) {
+        Long sumSize=apartmentMapper.findSumSizeThree();
+        List<PayInfor> list=apartmentMapper.findpay(start,pageSize,id);
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("total",sumSize);
+        hashMap.put("rows",list);
+        return hashMap;
+    }
     //刘军宜
     /**
      * 代收账单查询

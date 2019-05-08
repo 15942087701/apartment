@@ -445,6 +445,38 @@ public class ApartmentController {
 
         return "Income";
     }
+
+    /**
+     * 更多
+     */
+    @RequestMapping("findincoinfo")
+    public ModelAndView findincoinfo(Integer id){
+        ModelAndView mv=new ModelAndView();
+        mv.addObject("id",id);
+        mv.setViewName("findincoinfo");
+        return mv;
+    }
+
+    /**
+     * 查询账单信息
+     */
+    @RequestMapping("findbill")
+    @ResponseBody
+    public HashMap<String, Object> findbill (Integer start,Integer pageSize,Integer id){
+
+        return apartmentService.findbill(start,pageSize,id);
+    }
+
+    /**
+     *查询支付方式
+     */
+    @RequestMapping("findpay")
+    @ResponseBody
+    public HashMap<String, Object> findpay(Integer start,Integer pageSize,Integer id){
+
+        return apartmentService.findpay(start,pageSize,id);
+    }
+
 //刘军宜
     /**
      * 跳转代收账单页面
